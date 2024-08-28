@@ -765,4 +765,9 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
 
         $this->__construct($this->environment, $this->debug);
     }
+    protected $routeMiddleware = [
+        'auth.custom' => \App\Http\Middleware\Authenticate::class,
+    ];
+
 }
+
