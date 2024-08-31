@@ -8,6 +8,12 @@
                 <span>Dashboard</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('manpower.index') }}">
+                <i class="bi bi-people"></i>
+                <span>Manpower</span>
+            </a>
+        </li>
 
                 <!-- Menu -->
         <li class="nav-item">
@@ -17,12 +23,7 @@
             </a>
         </li>
         <!-- Manpower -->
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('manpower.index') }}">
-                <i class="bi bi-people"></i>
-                <span>Manpower</span>
-            </a>
-        </li>
+     
 
         <!-- Distribution -->
         <li class="nav-item">
