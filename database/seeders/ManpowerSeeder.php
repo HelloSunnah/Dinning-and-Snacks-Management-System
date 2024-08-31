@@ -19,19 +19,19 @@ class ManpowerSeeder extends Seeder
         DB::table('manpowers')->insert([
             [
                 'shift' => 'A',
-                'member' => 50
+                'member' => 100
             ],
             [
                 'shift' => 'B',
-                'member' => 30
+                'member' => 20
             ],
             [
                 'shift' => 'C',
-                'member' => 40
+                'member' => 10
             ],
             [
                 'shift' => 'General',
-                'member' => 20
+                'member' => 50
             ],
         ]);
     }

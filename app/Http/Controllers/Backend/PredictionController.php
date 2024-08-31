@@ -14,6 +14,7 @@ class PredictionController extends Controller
         return view('Backend.Prediction.index');
     }
 
+    
     public function calculate(Request $request)
     {
         $request->validate([
@@ -85,8 +86,8 @@ class PredictionController extends Controller
             $response['menu_items'] = $distributions->groupBy('menu_id')->map(function ($group) use ($totalMembers) {
                 $menu = $group->first()->menu;
                 $quantity = $menu->quantity_per_person * $totalMembers;
-                $unit = $menu->unit === 'kg' ? 'kg' : 'pcs'; // Use 'kg' if the unit is kg, otherwise 'pcs'
-                $formattedQuantity = $menu->unit === 'kg' ? number_format($quantity / 1000, 2) : $quantity; // Convert to kg if unit is kg
+                $unit = $menu->unit === 'kg' ? 'kg' : 'pcs'; 
+                $formattedQuantity = $menu->unit === 'kg' ? number_format($quantity / 1000, 2) : $quantity; 
                 return [
                     'menu_name' => $menu->name,
                     'quantity' => $formattedQuantity,

@@ -23,14 +23,14 @@ class MenuController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:menus,name',
             'unit' => 'required|string|max:255',
             'quantity_per_person' => 'required|numeric',
         ]);
 
         Menu::create($validated);
 
-        return redirect()->route('menu.index')->with('success', 'Menu created successfully.');
+        return redirect()->route('menus.index')->with('success', 'Menu created successfully.');
     }
 
    

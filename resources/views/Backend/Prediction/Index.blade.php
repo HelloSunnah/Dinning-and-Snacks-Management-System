@@ -35,7 +35,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group text-center">
+                    <div class="form-group text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
                     </div>
                 </form>
