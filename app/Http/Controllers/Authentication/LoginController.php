@@ -6,38 +6,25 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
 
-    public function login_form()
+    public function showLoginForm()
     {
-        return view('Authentication/Login');
+        return view('Authentication.login');
     }
 
     public function login(Request $request)
     {
+        $credentials = $request->only('email', 'password');
 
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && Hash::check($request->password, $user->password)) {
-            session(['user_id' => $user->id]);
-
-            return redirect()->route('dashboard');
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('dashboard'); // Redirect to the intended page
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
-    }
-    
-    public function logout()
-    {
-        session()->forget('user_id');
-
-        return redirect()->route('login'); 
-    }
-}
+        return redirect()->back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }}

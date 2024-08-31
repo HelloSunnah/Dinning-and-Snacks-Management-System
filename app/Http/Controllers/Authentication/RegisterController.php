@@ -1,22 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Authentication;
-
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 
 class RegisterController extends Controller
 {
-
-    public function register_form()
+    public function showRegistrationForm()
     {
-        return view('Authentication/Register');
+        return view('auth.register');
     }
-
 
     public function register(Request $request)
     {
@@ -27,13 +24,12 @@ class RegisterController extends Controller
         ]);
 
         $user = User::create([
-            'id' => Str::uuid(),
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        session(['user_id' => $user->id]);
+        Auth::login($user);
 
         return redirect()->route('dashboard');
     }
