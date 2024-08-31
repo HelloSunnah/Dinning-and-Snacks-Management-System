@@ -50,23 +50,22 @@
             </div>
 
             <div class="form-group">
-                <label for="shift" class="font-weight-bold">Shift:</label>
-                <select id="shift" name="shift" class="form-control" required>
-                    <option value="">Select Shift</option>
+                <label for="shift" class="font-weight-bold">Shift(s):</label>
+                <select id="shift" name="shift[]" class="form-control" multiple required>
+                    <!-- Options will be added dynamically -->
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="menu" class="font-weight-bold">Menu:</label>
-                <select id="menu" name="menu_id" class="form-control" required>
-                    <option value="">Select Menu</option>
+                <label for="menu" class="font-weight-bold">Menu(s):</label>
+                <select id="menu" name="menu_id[]" class="form-control" multiple required>
+                    <option value="">Select Menu(s)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="menu" class="font-weight-bold">Day</label>
-                <select id="day" name="day" class="form-control" required>
-                    <option value="regular">Regular</option>
+                <label for="day" class="font-weight-bold">Day(s):</label>
+                <select id="day" name="day[]" class="form-control" multiple required>
                     <option value="saturday">Saturday</option>
                     <option value="sunday">Sunday</option>
                     <option value="monday">Monday</option>
@@ -85,6 +84,7 @@
 @endsection
 
 @section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             const shiftElement = $('#shift');
@@ -111,7 +111,7 @@
                     }
                 }
 
-                shiftElement.empty().append('<option value="">Select Shift</option>');
+                shiftElement.empty().append('<option value="">Select Shift(s)</option>');
                 shifts.forEach(function (shift) {
                     shiftElement.append($('<option>', { value: shift, text: shift }));
                 });
@@ -121,7 +121,7 @@
                     url: '/get-details',
                     data: { distribution_type: type },
                     success: function (data) {
-                        menuElement.empty().append('<option value="">Select Menu</option>');
+                        menuElement.empty().append('<option value="">Select Menu(s)</option>');
                         data.menus.forEach(function (menu) {
                             menuElement.append($('<option>', { value: menu.id, text: menu.name }));
                         });

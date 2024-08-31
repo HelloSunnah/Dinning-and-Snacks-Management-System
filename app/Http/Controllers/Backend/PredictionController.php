@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Manpower;
@@ -44,8 +43,8 @@ class PredictionController extends Controller
             $afternoonShiftDetails = Manpower::whereIn('shift', $afternoonShifts)->get();
     
             $response['unique_shifts'] = $morningShiftDetails->merge($afternoonShiftDetails);
-    
 
+            
             $response['morning_menu_items'] = $distributions->where('time_of_day', 'morning')->groupBy('menu_id')->map(function ($group) use ($morningShiftDetails) {
                 $menu = $group->first()->menu;
                 $totalMembers = $morningShiftDetails->whereIn('shift', $group->pluck('shift')->unique())->sum('member');

@@ -4,59 +4,87 @@
     <div class="main-content">
         <h1>Prediction</h1>
 
-        <form id="predictionForm">
-            @csrf
-            <div class="form-group">
-                <label for="distribution_type" class="font-weight-bold">Distribution Type:</label>
-                <select id="distribution_type" name="distribution_type" class="form-control" required>
-                    <option value="">Select Distribution Type</option>
-                    <option value="lunch">Lunch</option>
-                    <option value="snack">Snack</option>
-                </select>
+        <!-- Prediction Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Prediction Form</h5>
+            </div>
+            <div class="card-body">
+                <form id="predictionForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="distribution_type" class="font-weight-bold">Distribution Type:</label>
+                        <select id="distribution_type" name="distribution_type" class="form-control" required>
+                            <option value="">Select Distribution Type</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="snack">Snack</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="day" class="font-weight-bold">Day:</label>
+                        <select id="day" name="day" class="form-control" required>
+                            <option value="">Select Day</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="mt-4" style="display: none;">
+            <!-- Shifts Details -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Shifts Receiving <span id="distributionTypeLabel"></span></h5>
+                </div>
+                <div class="card-body">
+                    <p>Total Number of Members: <span id="totalMembers">0</span></p>
+                    <ul id="shiftsList" class="list-group"></ul>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="day" class="font-weight-bold">Day:</label>
-                <select id="day" name="day" class="form-control" required>
-                    <option value="">Select Day</option>
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                    <option value="saturday">Saturday</option>
-                    <option value="sunday">Sunday</option>
-                </select>
-            </div>
-
-            <div class="form-group d-flex justify-content-center" style="padding:10px;">
-                <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
-            </div>
-        </form>
-
-        <div id="results" style="display: none;">
-            <h2>Results</h2>
-
-            <!-- Display shifts and member details -->
-            <div id="shiftsDetails">
-                <h3>Shifts Receiving <span id="distributionTypeLabel"></span></h3>
-                <p>Total Number of Members: <span id="totalMembers">0</span></p>
-                <ul id="shiftsList"></ul>
-            </div>
-
-            <!-- Display menu items needed -->
+            <!-- Menu Items Needed -->
             <div id="menuItems">
-                <div id="morningBlock" style="display: none;">
-                    <h4>Block A: Morning Snacks</h4>
-                    <ul id="morningMenuItems"></ul>
+                <!-- Morning Snacks -->
+                <div id="morningBlock" class="card mb-4" style="display: none;">
+                    <div class="card-header">
+                        <h5 class="mb-0"> Morning Snacks</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="morningMenuItems"></div>
+                    </div>
                 </div>
-                <div id="afternoonBlock" style="display: none;">
-                    <h4>Block B: Afternoon Snacks</h4>
-                    <ul id="afternoonMenuItems"></ul>
+
+                <!-- Afternoon Snacks -->
+                <div id="afternoonBlock" class="card mb-4" style="display: none;">
+                    <div class="card-header">
+                        <h5 class="mb-0"> Afternoon Snacks</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="afternoonMenuItems"></div>
+                    </div>
                 </div>
-                <div id="lunchBlock" style="display: none;">
-                    <h4>Lunch Menu Items</h4>
-                    <ul id="lunchMenuItems"></ul>
+
+                <!-- Lunch Menu Items -->
+                <div id="lunchBlock" class="card mb-4" style="display: none;">
+                    <div class="card-header">
+                        <h5 class="mb-0">Lunch Menu Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="lunchMenuItems"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,6 +93,7 @@
 
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#predictionForm').on('submit', function (e) {
@@ -94,20 +123,38 @@
 
                             // Populate shifts list and calculate total members
                             response.unique_shifts.forEach(function (shift) {
-                                $('#shiftsList').append(`<li>${shift.shift}: ${shift.member} members</li>`);
+                                $('#shiftsList').append(`<li class="list-group-item">${shift.shift}: ${shift.member} members</li>`);
                                 totalMembers += shift.member; // Calculate total members
                             });
 
                             // Populate morning menu items
                             $('#morningMenuItems').empty();
                             response.morning_menu_items.forEach(function (item) {
-                                $('#morningMenuItems').append(`<li>${item.menu_name} - ${item.quantity} ${item.unit}</li>`);
+                                $('#morningMenuItems').append(`
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${item.menu_name}</h5>
+                                                <p class="card-text">${item.quantity} ${item.unit}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
                             });
 
                             // Populate afternoon menu items
                             $('#afternoonMenuItems').empty();
                             response.afternoon_menu_items.forEach(function (item) {
-                                $('#afternoonMenuItems').append(`<li>${item.menu_name} - ${item.quantity} ${item.unit}</li>`);
+                                $('#afternoonMenuItems').append(`
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${item.menu_name}</h5>
+                                                <p class="card-text">${item.quantity} ${item.unit}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
                             });
 
                         } else if (distributionType === 'lunch') {
@@ -118,13 +165,22 @@
                             // Populate lunch menu items
                             $('#lunchMenuItems').empty();
                             response.menu_items.forEach(function (item) {
-                                $('#lunchMenuItems').append(`<li>${item.menu_name} - ${item.quantity} ${item.unit}</li>`);
+                                $('#lunchMenuItems').append(`
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${item.menu_name}</h5>
+                                                <p class="card-text">${item.quantity} ${item.unit}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
                             });
 
                             // Populate shifts list for lunch and calculate total members
                             $('#shiftsList').empty();
                             response.unique_shifts.forEach(function (shift) {
-                                $('#shiftsList').append(`<li>${shift.shift}: ${shift.member} members</li>`);
+                                $('#shiftsList').append(`<li class="list-group-item">${shift.shift}: ${shift.member} members</li>`);
                                 totalMembers += shift.member; // Calculate total members
                             });
                         }
@@ -133,7 +189,7 @@
                         $('#totalMembers').text(totalMembers);
                     },
                     error: function (xhr) {
-                        console.log(xhr.responseText);
+                        console.error('An error occurred:', xhr.responseText);
                     }
                 });
             });

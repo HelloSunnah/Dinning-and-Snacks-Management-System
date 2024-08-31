@@ -4,6 +4,17 @@
     <div class="main-content">
         <h1>Edit Manpower</h1>
 
+        <!-- Display Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('manpower.update', $manpower->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -11,9 +22,9 @@
             <div class="form-group">
 
                 <div class="row">
-                    <div class="col-md-6"> 
-                        <label for="group_name">Shift</label>
-                        <input type="text" readonly id="shift" name="group_name" class="form-control" value="{{ old('shift', $manpower->shift) }}" required>
+                    <div class="col-md-6">
+                        <label for="shift">Shift</label>
+                        <input type="text" id="shift" name="shift" class="form-control" value="{{ old('shift', $manpower->shift) }}" required>
                     </div>
                     <div class="col-md-6">
                         <label for="member">Member</label>

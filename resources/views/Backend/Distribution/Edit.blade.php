@@ -4,6 +4,7 @@
     <div class="main-content">
         <h1>Edit Distribution Record</h1>
 
+        <!-- Display Validation Errors -->
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -14,15 +15,10 @@
             </div>
         @endif
 
+        <!-- Display Success Message -->
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
             </div>
         @endif
 
@@ -33,44 +29,46 @@
             <div class="form-group">
                 <label for="distribution_type" class="font-weight-bold">Distribution Type:</label>
                 <select id="distribution_type" name="distribution_type" class="form-control" required>
-                    <option value="lunch" {{ $distribution->distribution_type == 'lunch' ? 'selected' : '' }}>Lunch</option>
-                    <option value="snack" {{ $distribution->distribution_type == 'snack' ? 'selected' : '' }}>Snack</option>
+                    <option value="">Select Distribution Type</option>
+                    <option value="lunch" {{ $distribution->distribution_type === 'lunch' ? 'selected' : '' }}>Lunch</option>
+                    <option value="snack" {{ $distribution->distribution_type === 'snack' ? 'selected' : '' }}>Snack</option>
                 </select>
             </div>
 
-            <div class="form-group" id="time_of_day_container" style="{{ $distribution->distribution_type == 'snack' ? '' : 'display: none;' }}">
+            <div class="form-group" id="time_of_day_container" style="{{ $distribution->distribution_type === 'snack' ? '' : 'display: none;' }}">
                 <label for="time_of_day" class="font-weight-bold">Time of Day (for Snacks):</label>
                 <select id="time_of_day" name="time_of_day" class="form-control">
-                    <option value="morning" {{ $distribution->time_of_day == 'morning' ? 'selected' : '' }}>Morning</option>
-                    <option value="afternoon" {{ $distribution->time_of_day == 'afternoon' ? 'selected' : '' }}>Afternoon</option>
+                    <option value="">Select Time of Day</option>
+                    <option value="morning" {{ $distribution->time_of_day === 'morning' ? 'selected' : '' }}>Morning</option>
+                    <option value="afternoon" {{ $distribution->time_of_day === 'afternoon' ? 'selected' : '' }}>Afternoon</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="shift" class="font-weight-bold">Shift:</label>
-                <select id="shift" name="shift" class="form-control" required>
-                    <option value="{{ $distribution->shift }}">{{ $distribution->shift }}</option>
+                <label for="shift" class="font-weight-bold">Shift(s):</label>
+                <select id="shift" name="shift[]" class="form-control" multiple required>
+                    <!-- Options will be added dynamically -->
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="menu" class="font-weight-bold">Menu:</label>
-                <select id="menu" name="menu_id" class="form-control" required>
-                    <option value="{{ $distribution->menu_id }}">{{ $distribution->menu->name }}</option>
+                <label for="menu" class="font-weight-bold">Menu(s):</label>
+                <select id="menu" name="menu_id[]" class="form-control" multiple required>
+                    <!-- Options will be added dynamically -->
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="day" class="font-weight-bold">Day:</label>
-                <select id="day" name="day" class="form-control" required>
-                    <option value="regular" {{ $distribution->day == 'regular' ? 'selected' : '' }}>Regular</option>
-                    <option value="saturday" {{ $distribution->day == 'saturday' ? 'selected' : '' }}>Saturday</option>
-                    <option value="sunday" {{ $distribution->day == 'sunday' ? 'selected' : '' }}>Sunday</option>
-                    <option value="monday" {{ $distribution->day == 'monday' ? 'selected' : '' }}>Monday</option>
-                    <option value="tuesday" {{ $distribution->day == 'tuesday' ? 'selected' : '' }}>Tuesday</option>
-                    <option value="wednesday" {{ $distribution->day == 'wednesday' ? 'selected' : '' }}>Wednesday</option>
-                    <option value="thursday" {{ $distribution->day == 'thursday' ? 'selected' : '' }}>Thursday</option>
-                    <option value="friday" {{ $distribution->day == 'friday' ? 'selected' : '' }}>Friday</option>
+                <label for="day" class="font-weight-bold">Day(s):</label>
+                <select id="day" name="day[]" class="form-control" multiple required>
+                    <option value="regular" {{ in_array('regular', $days) ? 'selected' : '' }}>Regular</option>
+                    <option value="saturday" {{ in_array('saturday', $days) ? 'selected' : '' }}>Saturday</option>
+                    <option value="sunday" {{ in_array('sunday', $days) ? 'selected' : '' }}>Sunday</option>
+                    <option value="monday" {{ in_array('monday', $days) ? 'selected' : '' }}>Monday</option>
+                    <option value="tuesday" {{ in_array('tuesday', $days) ? 'selected' : '' }}>Tuesday</option>
+                    <option value="wednesday" {{ in_array('wednesday', $days) ? 'selected' : '' }}>Wednesday</option>
+                    <option value="thursday" {{ in_array('thursday', $days) ? 'selected' : '' }}>Thursday</option>
+                    <option value="friday" {{ in_array('friday', $days) ? 'selected' : '' }}>Friday</option>
                 </select>
             </div>
 
@@ -108,7 +106,7 @@
                     }
                 }
 
-                shiftElement.empty().append('<option value="">Select Shift</option>');
+                shiftElement.empty().append('<option value="">Select Shift(s)</option>');
                 shifts.forEach(function (shift) {
                     shiftElement.append($('<option>', { value: shift, text: shift }));
                 });
@@ -131,6 +129,9 @@
 
             distributionTypeElement.change(updateShiftsAndMenu);
             timeOfDayElement.change(updateShiftsAndMenu);
+
+            // Initialize form with existing data
+            updateShiftsAndMenu();
         });
     </script>
 @endsection
